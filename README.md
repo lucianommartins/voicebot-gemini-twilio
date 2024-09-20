@@ -1,4 +1,6 @@
-# Call Gemini: Generative AI Phone Calling
+# **Call Gemini: Generative AI Phone Calling**
+
+## Workshop delivered at TDC São Paulo 2024 conference
 
 Wouldn't it be neat if you could build an app that allowed you to chat with Google Gemini on the phone?
 
