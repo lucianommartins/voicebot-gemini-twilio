@@ -20,7 +20,6 @@ Recursos:
 ## Configurando para Desenvolvimento
 
 ### Pré-requisitos
-- <TBD>
 
 Se você estiver hospedando o aplicativo localmente, também recomendamos usar um serviço de tunelamento como o [ngrok](https://ngrok.com) para que o Twilio possa encaminhar áudio para seu aplicativo.
 
