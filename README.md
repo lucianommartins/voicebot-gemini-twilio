@@ -1,86 +1,86 @@
-# **Call Gemini: Generative AI Phone Calling**
+# **Call Gemini: Ligações Telefônicas com IA Generativa**
 
-## Workshop delivered at TDC São Paulo 2024 conference
+## Workshop apresentado na conferência TDC São Paulo 2024
 
-Wouldn't it be neat if you could build an app that allowed you to chat with Google Gemini on the phone?
+Não seria legal se você pudesse construir um aplicativo que permitisse conversar com o Google Gemini ao telefone?
 
-Twilio gives you a superpower called [Media Streams](https://twilio.com/media-streams). Media Streams provides a Websocket connection to both sides of a phone call. You can get audio streamed to you, process it, and send audio back.
+O Twilio te dá um superpoder chamado [Media Streams](https://twilio.com/media-streams). O Media Streams fornece uma conexão Websocket para ambos os lados de uma chamada telefônica. Você pode receber áudio transmitido, processá-lo e enviar áudio de volta.
 
-This app serves as a demo exploring two services:
-- [Google Cloud Text-to-Speech](https://cloud.google.com/tts/) for Speech to Text and Text to Speech
-- [Google Gemini](https://ai.google.dev/gemini) for for responses generation using Google Gemini API
+Este aplicativo serve como uma demonstração explorando dois serviços:
+- [Google Cloud Text-to-Speech](https://cloud.google.com/tts/) para Fala para Texto e Texto para Fala
+- [Google Gemini](https://ai.google.dev/gemini) para geração de respostas usando a API do Google Gemini
 
-These service combine to create a voice application that is remarkably better at transcribing, understanding, and speaking than traditional IVR systems.
+Esses serviços se combinam para criar um aplicativo de voz que é notavelmente melhor em transcrever, entender e falar do que os sistemas tradicionais de URA.
 
-Features:
-- 🏁 Returns responses with low latency, typically 1 second by utilizing streaming.
-- ❗️ Allows the user to interrupt the Google Gemini assistant and ask a different question.
-- 📔 Maintains chat history with Google Gemini.
+Recursos:
+- 🏁 Retorna respostas com baixa latência, normalmente 1 segundo, utilizando streaming.
+- ❗️ Permite que o usuário interrompa o assistente Google Gemini e faça uma pergunta diferente.
+- 📔 Mantém o histórico de bate-papo com o Google Gemini.
 
-## Setting up for Development
+## Configurando para Desenvolvimento
 
-### Prerequisites
+### Pré-requisitos
 - <TBD>
 
-If you're hosting the app locally, we also recommend using a tunneling service like [ngrok](https://ngrok.com) so that Twilio can forward audio to your app.
+Se você estiver hospedando o aplicativo localmente, também recomendamos usar um serviço de tunelamento como o [ngrok](https://ngrok.com) para que o Twilio possa encaminhar áudio para seu aplicativo.
 
-### 1. Start Ngrok
-Start an [ngrok](https://ngrok.com) tunnel for port `3000`:
+### 1. Inicie o Ngrok
+Inicie um túnel [ngrok](https://ngrok.com) para a porta `3000`:
 
 ```bash
 ngrok http 3000
 ```
-Ngrok will give you a unique URL, like `abc123.ngrok.io`. Copy the URL without http:// or https://. You'll need this URL in the next step.
+O Ngrok fornecerá um URL exclusivo, como `abc123.ngrok.io`. Copie o URL sem http:// ou https://. Você precisará deste URL na próxima etapa.
 
-### 2. Configure Environment Variables
-Copy `.env.example` to `.env` and configure the env variables.
+### 2. Configure as Variáveis de Ambiente
+Copie `.env.example` para `.env` e configure as variáveis de ambiente.
 
 
-### 3. Install Dependencies with NPM
-Install the necessary packages:
+### 3. Instale as Dependências com NPM
+Instale os pacotes necessários:
 
 ```bash
 npm install
 ```
 
-### 4. Start Your Server in Development Mode
-Run the following command:
+### 4. Inicie Seu Servidor em Modo de Desenvolvimento
+Execute o seguinte comando:
 ```bash
 npm run dev
 ```
-This will start your app using `nodemon` so that any changes to your code automatically refreshes and restarts the server.
+Isso iniciará seu aplicativo usando `nodemon` para que qualquer alteração no seu código atualize e reinicie automaticamente o servidor.
 
-### 5. Configure an Incoming Phone Number
+### 5. Configure um Número de Telefone de Entrada
 
-Connect a phone number using the [Twilio Console](https://console.twilio.com/us1/develop/phone-numbers/manage/incoming).
+Conecte um número de telefone usando o [Twilio Console](https://console.twilio.com/us1/develop/phone-numbers/manage/incoming).
 
-You can also use the Twilio CLI:
+Você também pode usar o Twilio CLI:
 
 ```bash
 twilio phone-numbers:update +1[your-twilio-number] --voice-url=https://your-server.ngrok.io/incoming
 ```
-This configuration tells Twilio to send incoming call audio to your app when someone calls your number. The app responds to the incoming call webhook with a [Stream](https://www.twilio.com/docs/voice/twiml/stream) TwiML verb that will connect an audio media stream to your websocket server.
+Esta configuração diz ao Twilio para enviar o áudio da chamada recebida para seu aplicativo quando alguém ligar para seu número. O aplicativo responde ao webhook da chamada recebida com um verbo [Stream](https://www.twilio.com/docs/voice/twiml/stream) TwiML que conectará um fluxo de mídia de áudio ao seu servidor websocket.
 
-## Testing with Jest
-Repeatedly calling the app can be a time consuming way to test your tool function calls. This project contains example unit tests that can help you test your functions without relying on the Google Gemini to call them.
+## Testando com Jest
+Ligar repetidamente para o aplicativo pode ser uma maneira demorada de testar as chamadas de função da sua ferramenta. Este projeto contém exemplos de testes de unidade que podem te ajudar a testar suas funções sem depender do Google Gemini para chamá-las.
 
-Simple example tests are available in the `/test` directory. To run them, simply run `npm run test`.
+Exemplos simples de testes estão disponíveis no diretório `/test`. Para executá-los, basta executar `npm run test`.
 
-## Deploy via Fly.io
-Fly.io is a hosting service similar to Heroku that simplifies the deployment process. Given Twilio Media Streams are sent and received from us-east-1, it's recommended to choose Fly's Ashburn, VA (IAD) region.
+## Implantar via Fly.io
+O Fly.io é um serviço de hospedagem semelhante ao Heroku que simplifica o processo de implantação. Dado que os Twilio Media Streams são enviados e recebidos de us-east-1, é recomendado escolher a região Ashburn, VA (IAD) do Fly.
 
-> Deploying to Fly.io is not required to try the app, but can be helpful if your home internet speed is variable.
+> Implantar no Fly.io não é obrigatório para experimentar o aplicativo, mas pode ser útil se a velocidade da sua internet residencial for variável.
 
-Modify the app name `fly.toml` to be a unique value (this must be globally unique).
+Modifique o nome do aplicativo `fly.toml` para um valor único (este deve ser globalmente único).
 
-Deploy the app using the Fly.io CLI:
+Implante o aplicativo usando o Fly.io CLI:
 ```bash
 fly launch
 
 fly deploy
 ```
 
-Import your secrets from your .env file to your deployed app:
+Importe seus segredos do seu arquivo .env para seu aplicativo implantado:
 ```bash
 fly secrets import < .env
-```
+``` 
