@@ -1,0 +1,33 @@
+{
+  "name": "genai-phone",
+  "version": "1.1.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "Charlie Weems",
+  "license": "MIT",
+  "dependencies": {
+    "@google-cloud/speech": "^6.7.0",
+    "@google-cloud/text-to-speech": "^5.4.0",
+    "@google/generative-ai": "^0.19.0",
+    "colors": "^1.4.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.19.2",
+    "express-ws": "^5.0.2",
+    "node-fetch": "^2.7.0",
+    "twilio": "^4.23.0",
+    "uuid": "^9.0.1",
+    "wavefile": "^11.0.0"
+  },
+  "devDependencies": {
+    "@flydotio/dockerfile": "^0.4.11",
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.2"
+  }
+}
