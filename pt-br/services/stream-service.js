@@ -3,68 +3,72 @@ import { v4 as uuidv4 } from 'uuid';
 
 class StreamService extends EventEmitter {
   constructor(websocket) {
-    super();
-    this.ws = websocket;
-    this.audioBuffer = {};
-    this.streamSid = '';
+    super(); // Chama o construtor da classe pai (EventEmitter)
+    this.ws = websocket; // Armazena a conexão websocket
+    this.audioBuffer = {}; // Inicializa um objeto vazio para armazenar buffers de áudio
+    this.streamSid = ''; // Inicializa uma string vazia para o stream SID
   }
 
   setStreamSid(streamSid) {
+    // Define o stream SID
     this.streamSid = streamSid;
   }
 
   buffer(audio, message) {
-    const { id, partialOrder } = message;
+    const { id, partialOrder } = message; // Extrai o ID e a ordem parcial da mensagem
 
-    // Inicializa o buffer para o id se ainda não existir
+    // Inicializa o buffer para o ID se ele ainda não existir
     if (!this.audioBuffer[id]) {
       this.audioBuffer[id] = {
-        buffer: {},
-        expectedAudioIndex: 0
+        buffer: {}, // Inicializa um objeto vazio para armazenar fragmentos de áudio
+        expectedAudioIndex: 0 // Inicializa o índice de áudio esperado como 0
       };
     }
 
     // Armazena o áudio no buffer
     this.audioBuffer[id].buffer[partialOrder] = audio;
 
-    // Tenta tocar o próximo áudio na ordem
+    // Tenta reproduzir o próximo áudio em ordem
     this.playNextAudio(id);
   }
 
   playNextAudio(id) {
-    const collection = this.audioBuffer[id];
+    const collection = this.audioBuffer[id]; // Obtém a coleção de áudio para o ID fornecido
 
     // Verifica se o áudio esperado está disponível no buffer
     while (collection.buffer[collection.expectedAudioIndex]) {
-      const audio = collection.buffer[collection.expectedAudioIndex];
-      this.sendAudio(audio);
-      delete collection.buffer[collection.expectedAudioIndex];
-      collection.expectedAudioIndex++;
+      const audio = collection.buffer[collection.expectedAudioIndex]; // Obtém o fragmento de áudio para o índice esperado
+      this.sendAudio(audio); // Envia o fragmento de áudio para o websocket
+      delete collection.buffer[collection.expectedAudioIndex]; // Remove o fragmento de áudio do buffer
+      collection.expectedAudioIndex++; // Incrementa o índice de áudio esperado
     }
   }
 
   sendAudio(audio) {
+    // Envia o áudio para o websocket como um evento de mídia
     this.ws.send(
       JSON.stringify({
-        streamSid: this.streamSid,
-        event: 'media',
+        streamSid: this.streamSid, // Inclui o stream SID
+        event: 'media', // Indica um evento de mídia
         media: {
-          payload: audio,
+          payload: audio, // Envia a carga de áudio
         },
       })
     );
 
-    // When the media completes you will receive a `mark` message with the label
+    // Gera um rótulo de marca exclusivo para identificar o final da mídia
     const markLabel = uuidv4();
+    // Envia um evento de marca para o websocket para indicar a conclusão da mídia
     this.ws.send(
       JSON.stringify({
         streamSid: this.streamSid,
         event: 'mark',
         mark: {
-          name: markLabel
+          name: markLabel // Inclui o rótulo de marca
         }
       })
     );
+    // Emite um evento 'audiosent' com o rótulo de marca
     this.emit('audiosent', markLabel);
   }
 }

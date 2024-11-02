@@ -7,8 +7,8 @@ import {TextToSpeechClient} from '@google-cloud/text-to-speech';
 class TextToSpeechService extends EventEmitter {
   constructor() {
     super(); // Chama o construtor da classe pai (EventEmitter)
-    console.log('Google Cloud TTS: iniciando o client do TTS')
-    this.client = new TextToSpeechClient(); // Inicializa o cliente Text-to-Speech
+    console.log('Google Cloud TTS: iniciando o cliente TTS')
+    this.client = new TextToSpeechClient(); // Inicializa o cliente de Text-to-Speech
   }
 
   async generate(message) {
@@ -18,11 +18,11 @@ class TextToSpeechService extends EventEmitter {
 
       if (!partialResponse) { return; } // Se não houver resposta parcial, retorna sem fazer nada
 
-      // Cria a requisição para o serviço Text-to-Speech
+      // Cria a solicitação para o serviço Text-to-Speech
       const request = {
-        input: {text: partialResponse}, // Define o texto a ser convertido em fala
-        voice: {languageCode: 'pt-BR', name: 'pt-BR-Wavenet-A'}, // Define a voz e o idioma (português brasileiro)
-        audioConfig: {audioEncoding: 'MULAW', sampleRateHertz: '8000'}, // Define a codificação de áudio e a frequência do áudio
+        input: {text: partialResponse}, // Define o texto a ser convertido para fala
+        voice: {languageCode: 'pt-BR', name: 'pt-BR-Wavenet-A'}, // Define a voz e o idioma (Português Brasileiro)
+        audioConfig: {audioEncoding: 'MULAW', sampleRateHertz: '8000'}, // Define a codificação de áudio e a frequência de áudio
       }
 
       // Faz a chamada para o serviço Text-to-Speech
@@ -30,13 +30,13 @@ class TextToSpeechService extends EventEmitter {
       const [response] = await this.client.synthesizeSpeech(request);
 
       const audioArrayBuffer = response.audioContent; // Extrai o conteúdo de áudio da resposta
-      console.log('Google Cloud TTS: finalizando a geração do áudio', audioArrayBuffer);
+      console.log('Google Cloud TTS: finalizando a geração de áudio', audioArrayBuffer);
       this.emit('speech', Buffer.from(audioArrayBuffer).toString('base64'), message); // Emite um evento 'speech' com o áudio codificado em base64 e a mensagem original
     } catch (err) { // Captura qualquer erro que ocorra durante o processo
-      console.error('Error Google Cloud TTS service'); // Exibe uma mensagem de erro no console
-      console.error(err); // Exibe o erro no console
+      console.error('Erro no serviço Google Cloud TTS'); // Registra uma mensagem de erro no console
+      console.error(err); // Registra o erro no console
     }
   }
 }
 
-export { TextToSpeechService }; // Exporta a classe TextToSpeechService para ser utilizada em outros arquivos
+export { TextToSpeechService }; // Exporta a classe TextToSpeechService para ser usada em outros arquivos

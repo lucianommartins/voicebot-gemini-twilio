@@ -5,10 +5,10 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 class GeminiService extends EventEmitter {
   constructor() {
     super(); // Chama o construtor da classe pai (EventEmitter)
-    this.genai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY); // Inicializa a API Google Generative AI com a chave de API do ambiente
+    this.genai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY); // Inicializa a API do Google Generative AI com a chave de API do ambiente
     this.gemini = this.genai.getGenerativeModel({ model: 'gemini-1.5-flash'}); // Seleciona o modelo Gemini 1.5 Flash
-    console.log('Gemini instance:', this.gemini) // Exibe a instância do modelo Gemini no console
-    // Inicia um chat com o modelo Gemini e define um histórico inicial
+    console.log('Instância do Gemini:', this.gemini) // Registra a instância do modelo Gemini no console
+    // Inicia um bate-papo com o modelo Gemini e define um histórico inicial
     this.chat = this.gemini.startChat({
     history: [
       {
@@ -35,22 +35,22 @@ class GeminiService extends EventEmitter {
 
               `
     const prompt = context + message.text // Combina o contexto com a mensagem do usuário para formar o prompt
-    const response = await this.chat.sendMessageStream(prompt) // Envia o prompt para o modelo e recebe uma resposta em stream
+    const response = await this.chat.sendMessageStream(prompt) // Envia o prompt para o modelo e recebe uma resposta em streaming
 
     let text = ''; // Inicializa uma variável para armazenar a resposta completa
-    // Itera sobre os chunks da resposta em stream
+    // Itera sobre os pedaços da resposta em streaming
     for await (const chunk of response.stream) {
-      const chunkText = chunk.text(); // Extrai o texto do chunk
-      console.log('Partial Gemini answer:', chunkText); // Exibe a resposta parcial no console
-      text += chunkText; // Adiciona o texto do chunk à resposta completa
+      const chunkText = chunk.text(); // Extrai o texto do pedaço
+      console.log('Resposta parcial do Gemini:', chunkText); // Registra a resposta parcial no console
+      text += chunkText; // Adiciona o texto do pedaço à resposta completa
     }
 
     // Se a resposta não estiver vazia
     if (text.length !== 0) {
       const rand = Math.floor(Math.random() * 1000) + 1; // Gera um número aleatório para usar como ID
-      console.log('Final Gemini answer id:', rand) // Exibe o ID da resposta no console
-      console.log('Final Gemini answer:', text) // Exibe a resposta completa no console
-      // Emite um evento 'geminireply' com a resposta, ordem (0), e ID
+      console.log('ID da resposta final do Gemini:', rand) // Registra o ID da resposta no console
+      console.log('Resposta final do Gemini:', text) // Registra a resposta completa no console
+      // Emite um evento 'geminireply' com a resposta, ordem (0) e ID
       this.emit('geminireply', {
         partialResponse: text,
         partialOrder:0,
