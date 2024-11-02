@@ -1,4 +1,4 @@
-### **versão em português **
+### **versão em português**
 
 # **Ligue para o Gemini: Ligações Telefônicas com IA Generativa**
 
@@ -20,7 +20,7 @@ Recursos:
 - ❗️ Permite que o usuário interrompa o assistente do Google Gemini e faça uma pergunta diferente.
 - 📔 Mantém um histórico do bate-papo com o Google Gemini.
 
-### **english version **
+### **english version**
 
 # **Call Gemini: Phone Calls with Generative AI**
 
